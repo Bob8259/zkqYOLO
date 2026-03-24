@@ -97,7 +97,8 @@ class YoloHttpServer(port: Int) : NanoHTTPD(port) {
             )
         }
         val imageBytes = ByteArray(contentLength)
-        session.inputStream.read(imageBytes, 0, contentLength)
+        // Use readFully to guarantee all bytes are consumed before decoding
+        java.io.DataInputStream(session.inputStream).readFully(imageBytes)
 
         val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
             ?: return jsonResponse(

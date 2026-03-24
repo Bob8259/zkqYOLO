@@ -95,15 +95,7 @@ object YoloDetector {
     }
 
     private fun loadModelFile(context: Context, modelType: String? = null): MappedByteBuffer {
-        if (modelType == "remove-obstacle") {
-            // Loaded from app private files directory
-            val modelFile = java.io.File(context.filesDir, "assets/obstacles_detector.tflite")
-            val inputStream = FileInputStream(modelFile)
-            val fileChannel = inputStream.channel
-            return fileChannel.map(FileChannel.MapMode.READ_ONLY, 0, modelFile.length())
-        }
-
-        // All other types are loaded from bundled assets
+        // All model types are loaded from bundled assets
         val assetFileName = when (modelType) {
             "walls-detect" -> "walls_detect.tflite"
             "numbers" -> "numbers_detector.tflite"

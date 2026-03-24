@@ -72,7 +72,7 @@ fun ServiceInfo(modifier: Modifier = Modifier) {
             modifier = Modifier.padding(top = 16.dp)
         )
         Text(
-            text = "移除障碍物，用宝石加速建筑，AI下兵，都城对战精准下法术，升级装备，升级战宠，部署英雄战旗，使用工人学徒/研究助手",
+            text = "移除障碍物，用宝石加速建筑，AI下兵，都城对战精准下法术，批量建造城墙，升级装备，升级战宠，部署英雄战旗，使用工人学徒/研究助手",
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 8.dp)
