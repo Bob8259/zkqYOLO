@@ -50,7 +50,7 @@ class YoloHttpServer(port: Int) : NanoHTTPD(port) {
     private fun handleStatus(): Response {
         val json = JSONObject()
             .put("status", "running")
-            .put("version", "1.00")
+            .put("version", "1.01")
             .put("modelLoaded", YoloDetector.isModelLoaded())
             .put("modelType", YoloDetector.getModelType() ?: JSONObject.NULL)
         return jsonResponse(Response.Status.OK, json)
@@ -60,7 +60,16 @@ class YoloHttpServer(port: Int) : NanoHTTPD(port) {
     private fun handleLoad(session: IHTTPSession): Response {
         val body = readBody(session)
         val json = JSONObject(body)
-        val modelType = if (json.has("modelType")) json.getString("modelType") else null
+
+        // modelType is required — reject if missing or null
+        if (!json.has("modelType") || json.isNull("modelType")) {
+            return jsonResponse(
+                Response.Status.BAD_REQUEST,
+                JSONObject().put("success", false)
+                    .put("error", "\"modelType\" is required. Valid types: walls-detect, numbers, building-detect, remove-obstacle")
+            )
+        }
+        val modelType = json.getString("modelType")
 
         return try {
             YoloDetector.loadWeights(modelType)

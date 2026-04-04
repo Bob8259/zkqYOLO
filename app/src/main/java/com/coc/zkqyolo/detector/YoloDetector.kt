@@ -53,7 +53,7 @@ object YoloDetector {
      * Loads model weights. Skips if the same model type is already loaded.
      * Throws on failure so the caller can report the error.
      */
-    fun loadWeights(modelType: String? = null) {
+    fun loadWeights(modelType: String) {
         if (interpreter != null && currentModelType == modelType) return
 
         clearWeights()
@@ -94,12 +94,16 @@ object YoloDetector {
         currentModelType = null
     }
 
-    private fun loadModelFile(context: Context, modelType: String? = null): MappedByteBuffer {
-        // All model types are loaded from bundled assets
+    private fun loadModelFile(context: Context, modelType: String): MappedByteBuffer {
+        // Validate modelType and resolve to the corresponding asset file
         val assetFileName = when (modelType) {
-            "walls-detect" -> "walls_detect.tflite"
+            "walls-detect" -> "walls_detector.tflite"
             "numbers" -> "numbers_detector.tflite"
-            else -> DEFAULT_MODEL_PATH
+            "building-detect" -> "my_building_detector.tflite"
+            "remove-obstacle" -> DEFAULT_MODEL_PATH
+            else -> throw IllegalArgumentException(
+                "Unknown modelType: \"$modelType\". Valid types: walls-detect, numbers, building-detect, remove-obstacle"
+            )
         }
         val fileDescriptor = context.assets.openFd(assetFileName)
         val inputStream = FileInputStream(fileDescriptor.fileDescriptor)
