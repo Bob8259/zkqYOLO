@@ -1,6 +1,6 @@
 # ZKQyolo — YOLO Inference Service for Android
 
-**Version:** 1.01
+**Version:** 1.02
 
 An Android app that runs a local HTTP server exposing YOLO object-detection inference. The app launches a foreground service on startup, making the detection API available to other apps or automation tools on the device via `http://localhost:13462`.
 
@@ -74,7 +74,7 @@ Health check. Returns the server status, version, and current model state.
 ```json
 {
   "status": "running",
-  "version": "1.01",
+  "version": "1.02",
   "modelLoaded": true,
   "modelType": "walls-detect"
 }
