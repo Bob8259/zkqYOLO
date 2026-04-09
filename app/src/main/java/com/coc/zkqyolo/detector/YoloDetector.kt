@@ -11,6 +11,7 @@ import android.util.Log
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
 import java.io.FileInputStream
+import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.MappedByteBuffer
@@ -95,24 +96,35 @@ object YoloDetector {
     }
 
     private fun loadModelFile(context: Context, modelType: String): MappedByteBuffer {
-        // Validate modelType and resolve to the corresponding asset file
+        // All YOLO models are expected to be bundled under app/src/main/assets.
         val assetFileName = when (modelType) {
             "walls-detect" -> "walls_detector.tflite"
             "numbers" -> "numbers_detector.tflite"
             "building-detect" -> "my_building_detector.tflite"
+            // Keep the API modelType stable while loading the bundled capital detector asset.
+            "capital-building-detect" -> "capital_building_detector.tflite"
             "remove-obstacle" -> DEFAULT_MODEL_PATH
             else -> throw IllegalArgumentException(
-                "Unknown modelType: \"$modelType\". Valid types: walls-detect, numbers, building-detect, remove-obstacle"
+                "Unknown modelType: \"$modelType\". Valid types: walls-detect, numbers, building-detect, capital-building-detect, remove-obstacle"
             )
         }
-        val fileDescriptor = context.assets.openFd(assetFileName)
-        val inputStream = FileInputStream(fileDescriptor.fileDescriptor)
-        val fileChannel = inputStream.channel
-        return fileChannel.map(
-            FileChannel.MapMode.READ_ONLY,
-            fileDescriptor.startOffset,
-            fileDescriptor.declaredLength
-        )
+
+        try {
+            val fileDescriptor = context.assets.openFd(assetFileName)
+            val inputStream = FileInputStream(fileDescriptor.fileDescriptor)
+            val fileChannel = inputStream.channel
+            return fileChannel.map(
+                FileChannel.MapMode.READ_ONLY,
+                fileDescriptor.startOffset,
+                fileDescriptor.declaredLength
+            )
+        } catch (e: IOException) {
+            throw IllegalStateException(
+                "Model asset \"$assetFileName\" for modelType \"$modelType\" was not found in app assets. " +
+                    "Bundle it under app/src/main/assets and keep .tflite files uncompressed.",
+                e
+            )
+        }
     }
 
     /**
