@@ -104,8 +104,9 @@ object YoloDetector {
             // Keep the API modelType stable while loading the bundled capital detector asset.
             "capital-building-detect" -> "capital_building_detector.tflite"
             "remove-obstacle" -> DEFAULT_MODEL_PATH
+            "clan-war-numbers" -> "clan_war_number_detector.tflite"
             else -> throw IllegalArgumentException(
-                "Unknown modelType: \"$modelType\". Valid types: walls-detect, numbers, building-detect, capital-building-detect, remove-obstacle"
+                "Unknown modelType: \"$modelType\". Valid types: walls-detect, numbers, building-detect, capital-building-detect, remove-obstacle, clan-war-numbers"
             )
         }
 
