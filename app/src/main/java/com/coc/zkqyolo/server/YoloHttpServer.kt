@@ -50,7 +50,7 @@ class YoloHttpServer(port: Int) : NanoHTTPD(port) {
     private fun handleStatus(): Response {
         val json = JSONObject()
             .put("status", "running")
-            .put("version", "1.05")
+            .put("version", "1.06")
             .put("modelLoaded", YoloDetector.isModelLoaded())
             .put("modelType", YoloDetector.getModelType() ?: JSONObject.NULL)
         return jsonResponse(Response.Status.OK, json)
