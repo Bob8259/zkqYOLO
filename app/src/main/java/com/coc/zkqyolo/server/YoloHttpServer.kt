@@ -66,7 +66,7 @@ class YoloHttpServer(port: Int) : NanoHTTPD(port) {
             return jsonResponse(
                 Response.Status.BAD_REQUEST,
                 JSONObject().put("success", false)
-                    .put("error", "\"modelType\" is required. Valid types: walls-detect, numbers, building-detect, capital-building-detect, remove-obstacle, clan-war-numbers")
+                    .put("error", "\"modelType\" is required. Valid types: walls-detect, numbers, building-detect, capital-building-detect, remove-obstacle, clan-war-numbers, clan-game")
             )
         }
         val modelType = json.getString("modelType")
